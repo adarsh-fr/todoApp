@@ -4,11 +4,13 @@ import 'package:todo_app/ids.dart';
 import 'todo_list_screen.dart';
 
 class AuthenticationScreen extends StatefulWidget {
+  const AuthenticationScreen({super.key});
+
   @override
-  _AuthenticationScreenState createState() => _AuthenticationScreenState();
+  AuthenticationScreenState createState() => AuthenticationScreenState();
 }
 
-class _AuthenticationScreenState extends State<AuthenticationScreen> {
+class AuthenticationScreenState extends State<AuthenticationScreen> {
   final Client appwriteClient = Client();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late String? email;
@@ -40,7 +42,23 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
             builder: (context) => TodoListScreen(email: emailController.text)),
       );
     } catch (e) {
-      // Show error popup
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Sign Up Error'),
+            content: Text('An error occurred during sign up: $e'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
@@ -56,7 +74,11 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
             builder: (context) => TodoListScreen(email: emailController.text)),
       );
     } catch (e) {
-      // Show error popup
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('An error occurred during sign in: $e'),
+        ),
+      );
     }
   }
 
@@ -64,67 +86,75 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Todo: Organize yourself ;)',
-            style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Todo: Organize yourself ;)',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.deepPurple, // Change app bar color
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              TextFormField(
-                controller: emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(labelText: 'Email'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  return null;
-                },
+      body: Center(
+        child: Card(
+          margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  TextFormField(
+                    controller: emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(labelText: 'Email'),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter your email';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 10.0),
+                  TextFormField(
+                    controller: passwordController,
+                    obscureText: true,
+                    decoration: const InputDecoration(labelText: 'Password'),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter your password';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20.0),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        signUp(emailController.text, passwordController.text);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepPurple, // Change button color
+                    ),
+                    child: const Text('Sign Up',
+                        style: TextStyle(color: Colors.white)),
+                  ),
+                  const SizedBox(height: 10.0),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        signIn(emailController.text, passwordController.text);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepPurple, // Change button color
+                    ),
+                    child: const Text('Sign In',
+                        style: TextStyle(color: Colors.white)),
+                  ),
+                ],
               ),
-              TextFormField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(labelText: 'Password'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter your password';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20.0),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    signUp(emailController.text, passwordController.text);
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.deepPurple, // Change button color
-                ),
-                child: const Text('Sign Up',
-                    style: TextStyle(color: Colors.white)),
-              ),
-              const SizedBox(height: 10.0),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    signIn(emailController.text, passwordController.text);
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.deepPurple, // Change button color
-                ),
-                child: const Text('Sign In',
-                    style: TextStyle(color: Colors.white)),
-              ),
-            ],
+            ),
           ),
         ),
       ),

@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
+
 import 'package:appwrite/models.dart';
 import 'package:flutter/material.dart';
 import 'package:appwrite/appwrite.dart';
@@ -98,7 +100,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => AuthenticationScreen(),
+          builder: (context) => const AuthenticationScreen(),
         ),
       );
     } catch (e) {
@@ -110,11 +112,11 @@ class _TodoListScreenState extends State<TodoListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('To-do List'),
+        title: const Text('To-do List',style: TextStyle(color: Colors.white),),
         backgroundColor: Colors.deepPurple,
         actions: [
           IconButton(
-            icon: Icon(Icons.exit_to_app, color: Colors.white,),
+            icon: const Icon(Icons.exit_to_app, color: Colors.white,),
             onPressed: logout,
             
           ),
@@ -128,10 +130,10 @@ class _TodoListScreenState extends State<TodoListScreen> {
             onTap: () => toggleTodoStatus(todo),
             child: Card(
               elevation: 3,
-              margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               color: todo.data['completed'] ? Colors.grey[300] : Colors.white,
               child: Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
                     Checkbox(
@@ -140,7 +142,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
                       checkColor: Colors.white,
                       activeColor: Colors.deepPurple,
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         todo.data['title'],
@@ -153,7 +155,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.delete),
+                      icon: const Icon(Icons.delete),
                       onPressed: () => deleteTodo(todo),
                     ),
                   ],
@@ -169,20 +171,20 @@ class _TodoListScreenState extends State<TodoListScreen> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text('Add Todo'),
+                title: const Text('Add Todo'),
                 content: TextField(
                   controller: todoController,
-                  decoration: InputDecoration(hintText: 'Enter your todo'),
+                  decoration: const InputDecoration(hintText: 'Enter your todo'),
                 ),
                 actions: <Widget>[
                   TextButton(
-                    child: Text('Cancel'),
+                    child: const Text('Cancel'),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
                   ),
                   TextButton(
-                    child: Text('Add'),
+                    child: const Text('Add'),
                     onPressed: () {
                       if (todoController.text.isNotEmpty) {
                         addTodo(todoController.text);
@@ -195,8 +197,8 @@ class _TodoListScreenState extends State<TodoListScreen> {
             },
           );
         },
-        child: Icon(Icons.add,color: Colors.white,),
         backgroundColor: Colors.deepPurple,
+        child: const Icon(Icons.add,color: Colors.white,),
       ),
     );
   }
