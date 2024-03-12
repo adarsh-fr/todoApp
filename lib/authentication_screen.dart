@@ -24,6 +24,7 @@ class AuthenticationScreenState extends State<AuthenticationScreen> {
     appwriteClient
         .setEndpoint('https://cloud.appwrite.io/v1')
         .setProject(AppwriteIDs.projectID);
+    userId = ID.unique();
     emailController = TextEditingController();
     passwordController = TextEditingController();
   }
